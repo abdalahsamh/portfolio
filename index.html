@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Abdullah Sameh | Pharaoh's Frontend Developer</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- DaisyUI -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              pharaoh: ['"Philosopher"', "Papyrus", "serif"],
+              hieroglyphic: ['"Almendra SC"', "serif"],
+              body: ['"Cairo"', "sans-serif"],
+            },
+            colors: {
+              gold: "#D4AF37",
+              darkgold: "#996515",
+              royalblue: "#0A369D",
+              nileblue: "#1A3A6E",
+              turquoise: "#40E0D0",
+              papyrus: "#F0E4C5",
+              earth: "#8B4513",
+              lapis: "#26619C",
+              pharaohbg: "#1E1B16",
+            },
+          },
+        },
+      };
+    </script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/daisyui@4.0.0/dist/full.css"
+    />
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Almendra+SC&family=Cairo:wght@400;600&family=Philosopher:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+      defer
+    ></script>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background-image: url("https://www.transparenttextures.com/patterns/papyrus.png"),
+          linear-gradient(to bottom, #1e1b16, #0a0e17);
+        background-attachment: fixed;
+      }
+
+      .pharaoh-nav {
+        background: linear-gradient(to right, #0a369d, #1e1b16);
+        border-bottom: 3px solid #d4af37;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      }
+
+      .pharaoh-nav a:hover {
+        color: #d4af37;
+        text-shadow: 0 0 5px #d4af37;
+      }
+
+      .pharaoh-card {
+        background: linear-gradient(145deg, #0a369d, #1a3a6e);
+        border: 2px solid #d4af37;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+      }
+
+      .pharaoh-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+      }
+
+      .hieroglyph-icon {
+        font-family: "Almendra SC", serif;
+        color: #d4af37;
+        font-size: 1.5rem;
+        margin-right: 8px;
+      }
+
+      .pharaoh-btn {
+        background: linear-gradient(to right, #d4af37, #996515);
+        color: #0a369d;
+        font-weight: bold;
+        border: none;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .pharaoh-btn:hover {
+        background: linear-gradient(to right, #996515, #d4af37);
+      }
+
+      .pharaoh-btn::after {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -60%;
+        width: 200%;
+        height: 200%;
+        background: rgba(255, 255, 255, 0.1);
+        transform: rotate(30deg);
+        transition: all 0.3s;
+      }
+
+      .pharaoh-btn:hover::after {
+        left: 100%;
+      }
+
+      .section-title {
+        position: relative;
+        display: inline-block;
+        padding-bottom: 10px;
+      }
+
+      .section-title::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(to right, #d4af37, #40e0d0, #d4af37);
+        border-radius: 3px;
+      }
+
+      @keyframes hieroglyphFloat {
+        0% {
+          background-position: 0 0;
+        }
+        100% {
+          background-position: 100% 100%;
+        }
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      @keyframes pulse-gold {
+        0%,
+        100% {
+          box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+        50% {
+          box-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
+        }
+      }
+
+      .hieroglyph-bg {
+        animation: hieroglyphFloat 60s linear infinite;
+      }
+
+      .float-animation {
+        animation: float 3s ease-in-out infinite;
+      }
+
+      .pulse-animation {
+        animation: pulse-gold 2s ease-in-out infinite;
+      }
+
+      .hieroglyph-float {
+        animation: hieroglyphFloat 60s linear infinite,
+          float 6s ease-in-out infinite;
+      }
+    </style>
+  </head>
+
+  <body class="text-papyrus font-body" x-data="{ open: false }">
+    <!-- Progress Bar -->
+    <div class="h-1 w-full bg-pharaohbg fixed top-0 left-0 z-50">
+      <div class="progress-bar h-full bg-gold" style="width: 0%"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="pharaoh-nav fixed w-full z-40 p-4">
+      <div class="container mx-auto flex justify-between items-center">
+        <div class="flex items-center">
+          <span class="hieroglyph-icon">𓃭</span>
+          <a href="#" class="text-xl font-pharaoh">Abdullah Sameh</a>
+        </div>
+        <div class="hidden md:flex space-x-8">
+          <a href="#about" class="transition duration-300">𓂀 About</a>
+          <a href="#skills" class="transition duration-300">𓆓 Skills</a>
+          <a href="#projects" class="transition duration-300">𓍯 Projects</a>
+          <a href="#services" class="transition duration-300">𓂞 Services</a>
+          <a href="#education" class="transition duration-300">𓂋 Education</a>
+          <a href="#contact" class="transition duration-300">𓃒 Contact</a>
+        </div>
+        <button @click="open = !open" class="md:hidden">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div
+        x-show="open"
+        @click.away="open = false"
+        class="md:hidden bg-royalblue w-full p-4 absolute left-0 shadow-lg"
+        style="display: none"
+      >
+        <div class="flex flex-col space-y-4">
+          <a href="#about" class="block py-2" @click="open = false">𓂀 About</a>
+          <a href="#skills" class="block py-2" @click="open = false"
+            >𓆓 Skills</a
+          >
+          <a href="#projects" class="block py-2" @click="open = false"
+            >𓍯 Projects</a
+          >
+          <a href="#services" class="block py-2" @click="open = false"
+            >𓂞 Services</a
+          >
+          <a href="#education" class="block py-2" @click="open = false"
+            >𓂋 Education</a
+          >
+          <a href="#contact" class="block py-2" @click="open = false"
+            >𓃒 Contact</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section
+      id="hero"
+      class="min-h-screen flex flex-col items-center justify-center text-center p-4 hieroglyph-float"
+      style="
+        background-image: url('https://www.transparenttextures.com/patterns/egyptian-hieroglyphs.png');
+      "
+      data-aos="fade-in"
+    >
+      <div
+        class="backdrop-blur-sm bg-black/30 p-8 rounded-lg border border-gold pulse-animation"
+      >
+        <h1
+          class="text-5xl md:text-7xl font-bold font-hieroglyphic"
+          data-aos="fade-down"
+        >
+          𓃭 Abdullah Sameh
+        </h1>
+        <p
+          class="text-2xl md:text-3xl mt-4 font-pharaoh float-animation"
+          data-aos="fade-up"
+        >
+          𓎟 Frontend Developer 𓀭
+        </p>
+        <div class="mt-8 flex gap-4 justify-center" data-aos="zoom-in">
+          <a
+            href="#projects"
+            class="pharaoh-btn btn hover:scale-105 transition-transform"
+            >𓍯 View Projects</a
+          >
+          <a
+            href="#contact"
+            class="btn btn-outline border-gold text-gold hover:bg-gold hover:text-pharaohbg hover:scale-105 transition-transform"
+            >𓃒 Contact Me</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section
+      id="about"
+      class="p-8 md:p-16 bg-black/50 backdrop-blur-sm"
+      data-aos="fade-up"
+    >
+      <div class="container mx-auto max-w-6xl">
+        <h2 class="text-4xl font-bold mb-8 font-hieroglyphic section-title">
+          𓂀 About Me
+        </h2>
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+          <div>
+            <p class="text-lg leading-relaxed">
+              Passionate frontend developer with a love for creating engaging UI
+              experiences using modern technologies like React.js, Tailwind, and
+              Vanilla JavaScript. I'm always striving to learn more and bring
+              ideas to life with animation and style.
+            </p>
+            <p class="text-lg leading-relaxed mt-4">
+              Like the ancient Egyptian architects who built timeless monuments,
+              I build digital experiences that stand the test of time.
+            </p>
+          </div>
+          <div class="flex justify-center">
+            <div
+              class="relative w-64 h-64 border-4 border-gold rounded-full overflow-hidden"
+            >
+              <!-- يمكنك استبدال هذا بمربع الصورة الخاص بك -->
+              <div
+                class="w-full h-full bg-nileblue flex items-center justify-center"
+              >
+                <span class="text-6xl">𓀭</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section
+      id="skills"
+      class="p-8 md:p-16 bg-royalblue/90 backdrop-blur-sm"
+      data-aos="fade-up"
+    >
+      <div class="container mx-auto max-w-6xl">
+        <h2 class="text-4xl font-bold mb-8 font-hieroglyphic section-title">
+          𓆓 My Skills
+        </h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="badge badge-outline border-gold text-gold p-4">
+            HTML 𓉔
+          </div>
+          <div class="badge badge-outline border-gold text-gold p-4">CSS 𓏏</div>
+          <div class="badge badge-outline border-gold text-gold p-4">
+            JavaScript 𓆣
+          </div>
+          <div class="badge badge-outline border-gold text-gold p-4">
+            React.js 𓃭
+          </div>
+          <div class="badge badge-outline border-gold text-gold p-4">Git 𓊪</div>
+          <div class="badge badge-outline border-gold text-gold p-4">
+            GitHub 𓅓
+          </div>
+          <div class="badge badge-outline border-gold text-gold p-4">
+            Bootstrap 𓋴
+          </div>
+          <div class="badge badge-outline border-gold text-gold p-4">
+            Tailwind 𓍯
+          </div>
+        </div>
+
+        <div class="mt-12">
+          <h3 class="text-2xl font-pharaoh mb-4">Skill Pyramid</h3>
+          <div class="flex flex-col items-center">
+            <div class="w-64 h-64 relative">
+              <!-- هرم المهارات -->
+              <div
+                class="absolute bottom-0 left-0 right-0 h-16 bg-gold/80 flex items-center justify-center"
+              >
+                <span class="font-bold text-pharaohbg">HTML/CSS</span>
+              </div>
+              <div
+                class="absolute bottom-16 left-8 right-8 h-16 bg-gold/70 flex items-center justify-center"
+              >
+                <span class="font-bold text-pharaohbg">JavaScript</span>
+              </div>
+              <div
+                class="absolute bottom-32 left-16 right-16 h-16 bg-gold/60 flex items-center justify-center"
+              >
+                <span class="font-bold text-pharaohbg">React</span>
+              </div>
+              <div
+                class="absolute bottom-48 left-24 right-24 h-16 bg-gold/50 flex items-center justify-center"
+              >
+                <span class="font-bold text-pharaohbg">Tailwind</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="p-8 md:p-16 bg-earth/90 backdrop-blur-sm">
+      <div class="container mx-auto max-w-6xl">
+        <h2 class="text-4xl font-bold mb-8 font-hieroglyphic section-title">
+          𓂞 My Services
+        </h2>
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="pharaoh-card p-6">
+            <div
+              class="h-16 w-16 bg-gold rounded-full flex items-center justify-center mx-auto mb-4"
+            >
+              <span class="text-2xl">𓃭</span>
+            </div>
+            <h3 class="text-xl font-pharaoh text-center">Web Development</h3>
+            <p class="text-center mt-2">
+              Modern responsive websites with latest technologies
+            </p>
+          </div>
+          <div class="pharaoh-card p-6">
+            <div
+              class="h-16 w-16 bg-gold rounded-full flex items-center justify-center mx-auto mb-4"
+            >
+              <span class="text-2xl">𓍯</span>
+            </div>
+            <h3 class="text-xl font-pharaoh text-center">UI/UX Design</h3>
+            <p class="text-center mt-2">
+              Beautiful and intuitive user interfaces
+            </p>
+          </div>
+          <div class="pharaoh-card p-6">
+            <div
+              class="h-16 w-16 bg-gold rounded-full flex items-center justify-center mx-auto mb-4"
+            >
+              <span class="text-2xl">𓆣</span>
+            </div>
+            <h3 class="text-xl font-pharaoh text-center">
+              Frontend Consulting
+            </h3>
+            <p class="text-center mt-2">
+              Expert advice for your frontend projects
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section
+      id="projects"
+      class="p-8 md:p-16 bg-black/50 backdrop-blur-sm"
+      data-aos="fade-up"
+    >
+      <div class="container mx-auto max-w-6xl">
+        <h2 class="text-4xl font-bold mb-8 font-hieroglyphic section-title">
+          𓍯 My Projects
+        </h2>
+        <div class="grid md:grid-cols-2 gap-8">
+          <div class="pharaoh-card">
+            <figure>
+              <div class="h-48 bg-nileblue flex items-center justify-center">
+                <span class="text-6xl">𓃭</span>
+              </div>
+            </figure>
+            <div class="card-body">
+              <h3 class="card-title text-2xl font-pharaoh">Simi Project</h3>
+              <p>
+                Landing page for a limousine company using animations and smooth
+                design.
+              </p>
+              <div class="card-actions justify-end mt-4">
+                <a
+                  href="https://simi-project.vercel.app/"
+                  class="pharaoh-btn btn btn-sm"
+                  >View Live 𓁹</a
+                >
+              </div>
+            </div>
+          </div>
+          <div class="pharaoh-card">
+            <figure>
+              <div class="h-48 bg-nileblue flex items-center justify-center">
+                <span class="text-6xl">𓊹</span>
+              </div>
+            </figure>
+            <div class="card-body">
+              <h3 class="card-title text-2xl font-pharaoh">GameZone</h3>
+              <p>
+                Ecommerce store for gaming products using React and Tailwind.
+              </p>
+              <div class="card-actions justify-end mt-4">
+                <a
+                  href="https://gamezone-fdwu.vercel.app/"
+                  class="pharaoh-btn btn btn-sm"
+                  >View Live 𓁹</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Education -->
+    <section
+      id="education"
+      class="p-8 md:p-16 bg-royalblue/90 backdrop-blur-sm"
+      data-aos="fade-up"
+    >
+      <div class="container mx-auto max-w-6xl">
+        <h2 class="text-4xl font-bold mb-8 font-hieroglyphic section-title">
+          𓂋 Education & Certificates
+        </h2>
+        <div class="space-y-4">
+          <div class="flex items-start">
+            <span class="hieroglyph-icon mt-1">𓂧</span>
+            <div>
+              <h3 class="text-xl font-pharaoh">Frontend Development Course</h3>
+              <p class="text-lg">Eraasoft</p>
+              <div class="flex items-center mt-2">
+                <div class="w-full bg-pharaohbg h-2 rounded-full">
+                  <div
+                    class="bg-gold h-2 rounded-full"
+                    style="width: 85%"
+                  ></div>
+                </div>
+                <span class="ml-2">85%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-start mt-6">
+            <span class="hieroglyph-icon mt-1">𓃀</span>
+            <div>
+              <h3 class="text-xl font-pharaoh">Self Learning</h3>
+              <p class="text-lg">Online Resources & Projects</p>
+              <div class="flex items-center mt-2">
+                <div class="w-full bg-pharaohbg h-2 rounded-full">
+                  <div
+                    class="bg-gold h-2 rounded-full"
+                    style="width: 90%"
+                  ></div>
+                </div>
+                <span class="ml-2">90%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section
+      id="contact"
+      class="p-8 md:p-16 bg-black/50 backdrop-blur-sm"
+      data-aos="fade-up"
+    >
+      <div class="container mx-auto max-w-6xl">
+        <h2 class="text-4xl font-bold mb-8 font-hieroglyphic section-title">
+          𓃒 Contact Me
+        </h2>
+        <div class="grid md:grid-cols-2 gap-8">
+          <div>
+            <p class="text-xl mb-6">
+              Feel free to reach out via WhatsApp or LinkedIn 👇
+            </p>
+            <ul class="space-y-4 text-lg">
+              <li class="flex items-center">
+                <span class="hieroglyph-icon">𓃻</span>
+                <strong>WhatsApp:</strong> 01276765139
+              </li>
+              <li class="flex items-center">
+                <span class="hieroglyph-icon">𓆣</span>
+                <strong>GitHub:</strong>
+                <a
+                  class="underline ml-2 text-gold"
+                  href="https://github.com/abdalahsamh"
+                  >github.com/abdalahsamh</a
+                >
+              </li>
+              <li class="flex items-center">
+                <span class="hieroglyph-icon">𓃭</span>
+                <strong>LinkedIn:</strong>
+                <a
+                  class="underline ml-2 text-gold"
+                  href="https://www.linkedin.com/in/abdallah-sameh-023622356"
+                  >Profile</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <form class="space-y-4">
+              <div>
+                <label class="block mb-2 font-pharaoh">Your Name</label>
+                <input
+                  type="text"
+                  placeholder="Enter your name"
+                  class="input input-bordered w-full bg-pharaohbg border-gold"
+                />
+              </div>
+              <div>
+                <label class="block mb-2 font-pharaoh">Your Email</label>
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  class="input input-bordered w-full bg-pharaohbg border-gold"
+                />
+              </div>
+              <div>
+                <label class="block mb-2 font-pharaoh">Message</label>
+                <textarea
+                  class="textarea textarea-bordered w-full h-32 bg-pharaohbg border-gold"
+                  placeholder="Your message"
+                ></textarea>
+              </div>
+              <button type="submit" class="pharaoh-btn btn w-full mt-4">
+                Send Message 𓂋
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-royalblue text-papyrus p-8 text-center">
+      <div class="container mx-auto">
+        <div class="flex justify-center space-x-6 mb-4">
+          <a href="#" class="text-2xl hover:text-gold transition">𓃭</a>
+          <a href="#" class="text-2xl hover:text-gold transition">𓂀</a>
+          <a href="#" class="text-2xl hover:text-gold transition">𓍯</a>
+        </div>
+        <p class="font-pharaoh">
+          &copy; 2025 Abdullah Sameh. All rights reserved.
+        </p>
+        <p class="mt-2 text-sm">
+          Designed with the spirit of ancient Egypt 𓆎𓅓𓏏𓊖
+        </p>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        duration: 1000,
+        once: true,
+      });
+
+      // شريط التقدم أثناء التمرير
+      window.addEventListener("scroll", function () {
+        const scrollTop =
+          document.documentElement.scrollTop || document.body.scrollTop;
+        const scrollHeight =
+          document.documentElement.scrollHeight -
+          document.documentElement.clientHeight;
+        const scrollProgress = (scrollTop / scrollHeight) * 100;
+
+        document.querySelector(".progress-bar").style.width =
+          scrollProgress + "%";
+      });
+    </script>
+  </body>
+</html>
